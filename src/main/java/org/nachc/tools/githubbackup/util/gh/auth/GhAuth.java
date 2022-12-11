@@ -6,14 +6,32 @@ import org.nachc.tools.githubbackup.util.appprops.GithubBackupAppProps;
 
 import com.nach.core.util.file.FileUtil;
 
+import lombok.Getter;
+
+@Getter
 public class GhAuth {
 
-	public static void exec() {
+	private String output;
+	
+	private String error;
+	
+	private int exitCode;
+	
+	public void exec() {
 		try {
-			String cmd = GithubBackupAppProps.getGhExeLocation();
+
+			// params
+//			String cmd = GithubBackupAppProps.getGhExeLocation();
+			String cmd = "gh";
 			String[] args = {"status"};
 			File root = FileUtil.getFile("/");
-			Runtime.getRuntime().exec(cmd, args, root);
+
+			// exec
+			Process process = new ProcessBuilder(cmd, "status").start();
+			this.output = FileUtil.getAsString(process.getInputStream());
+			this.error = FileUtil.getAsString(process.getErrorStream());
+			this.exitCode = process.waitFor();
+			
 		} catch(Exception exp) {
 			throw new RuntimeException(exp);
 		}
