@@ -4,19 +4,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.nach.core.util.file.FileUtil;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GhAuthIntegrationTest {
+public class GhAuthStatusIntegrationTest {
 
 	@Test
 	public void shouldDoAuth() {
 		log.info("Starting test...");
-		GhAuth auth = new GhAuth();
-		log.info("exe:      " + FileUtil.getCanonicalPath(auth.getExe()));
-		log.info("tokenLoc: " + auth.getTokenLoc());
+		GhAuthStatus auth = new GhAuthStatus();
 		auth.exec();
 		log.info("ErrorOut:\n" + auth.getError()); 
 		log.info("Response:  " + auth.getOutput()); 
