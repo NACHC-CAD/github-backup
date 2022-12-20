@@ -32,4 +32,8 @@ public class GithubBackupAppProps {
 		return TOKEN;
 	}
 	
+	public static String getTargetDir() {
+		return get("TargetDir");
+	}
+	
 }
