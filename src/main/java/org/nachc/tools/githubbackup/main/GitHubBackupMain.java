@@ -1,6 +1,8 @@
 package org.nachc.tools.githubbackup.main;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 
 import org.nachc.tools.githubbackup.util.appprops.GithubBackupAppProps;
@@ -16,29 +18,38 @@ import lombok.extern.slf4j.Slf4j;
 public class GitHubBackupMain {
 
 	public static void main(String[] args) {
-		File targetDir = getTargetDir();
-		File logFile = new File(targetDir, "backup.log");
-		List<String> repos = GetReposForUser.exec();
-		log.info("Got " + repos.size() + " repos");
-		int cnt = 0;
-		for(String repo : repos) {
-			cnt++;
-			log.info("\tCloning repo: " + repo);
-			log.info("\t(" + cnt + " of " + repos.size() + ")");
-			String msg = "";
-			msg += "\n\n----------------------------------\n";
-			msg += repo + "\n";
-			msg += "\n(" + cnt + " of " + repos.size() + ")";
-			FileUtil.write(msg, logFile);
-			Clone clone = new Clone();
-			clone.exec(repo, targetDir);
-//			FileUtil.write(clone.getOut(), logFile);
-			if(cnt > 2) {
-				log.info("QUITTING AFTER 3 (DELETE THIS BLOCK)");
-				break;
+		try {
+			File targetDir = getTargetDir();
+			File logFile = new File(targetDir, "backup.log");
+			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+			List<String> repos = GetReposForUser.exec();
+			log.info("Got " + repos.size() + " repos");
+			int cnt = 0;
+			for(String repo : repos) {
+				cnt++;
+				log.info("\tCloning repo: " + repo);
+				log.info("\t(" + cnt + " of " + repos.size() + ")");
+				String msg = "\n\n";
+				msg += "----------------------------------\n";
+				msg += repo + "\n";
+				msg += "(" + cnt + " of " + repos.size() + ")\n";
+				writer.append(msg);
+				Clone clone = new Clone();
+				clone.exec(repo, targetDir);
+				writer.append(clone.getOut());
+				writer.append("\n");
+				writer.append(clone.getError());
+				if(cnt > 2) {
+					log.info("QUITTING AFTER 3 (DELETE THIS BLOCK)");
+					break;
+				}
 			}
+			writer.flush();
+			writer.close();
+			log.info("Done!");
+		} catch(Exception exp) {
+			throw new RuntimeException(exp);
 		}
-		log.info("Done!");
 	}
 	
 	private static File getTargetDir() {
