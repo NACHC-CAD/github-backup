@@ -38,11 +38,7 @@ public class GitHubBackupMain {
 				clone.exec(repo, targetDir);
 				writer.append(clone.getOut());
 				writer.append("\n");
-				writer.append(clone.getError());
-				if(cnt > 2) {
-					log.info("QUITTING AFTER 3 (DELETE THIS BLOCK)");
-					break;
-				}
+				writer.append(clone.getErr());
 			}
 			writer.flush();
 			writer.close();
