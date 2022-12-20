@@ -17,6 +17,7 @@ public class GitHubBackupMain {
 
 	public static void main(String[] args) {
 		File targetDir = getTargetDir();
+		File logFile = new File(targetDir, "backup.log");
 		List<String> repos = GetReposForUser.exec();
 		log.info("Got " + repos.size() + " repos");
 		int cnt = 0;
@@ -24,8 +25,18 @@ public class GitHubBackupMain {
 			cnt++;
 			log.info("\tCloning repo: " + repo);
 			log.info("\t(" + cnt + " of " + repos.size() + ")");
+			String msg = "";
+			msg += "\n\n----------------------------------\n";
+			msg += repo + "\n";
+			msg += "\n(" + cnt + " of " + repos.size() + ")";
+			FileUtil.write(msg, logFile);
 			Clone clone = new Clone();
 			clone.exec(repo, targetDir);
+//			FileUtil.write(clone.getOut(), logFile);
+			if(cnt > 2) {
+				log.info("QUITTING AFTER 3 (DELETE THIS BLOCK)");
+				break;
+			}
 		}
 		log.info("Done!");
 	}
@@ -38,4 +49,5 @@ public class GitHubBackupMain {
 		FileUtil.mkdirs(file);
 		return file;
 	}
+	
 }
