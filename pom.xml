@@ -145,6 +145,27 @@
 
 		<plugins>
 
+			<!-- include dependencies in the jar files -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/github-backup/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- create the jar file -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -160,10 +181,30 @@
 							<Class-Path>.</Class-Path>
 						</manifestEntries>
 					</archive>
-					<!--
-					<finalName></finalName>
-					-->
+					<finalName>github-backup/github-backup</finalName>
 				</configuration>
+			</plugin>
+
+			<!-- copy config files -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Copying files</echo>
+								<copy file="${basedir}/src/main/resources/props/github-backup-app.properties" tofile="${basedir}/target/github-backup/props/github-backup-app.properties" />
+								<copy file="${basedir}/src/main/resources/bat/github-backup.bat" tofile="${basedir}/target/github-backup/github-backup.bat" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- don't run the integration tests -->

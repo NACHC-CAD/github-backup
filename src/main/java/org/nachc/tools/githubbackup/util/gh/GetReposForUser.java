@@ -27,7 +27,7 @@ public class GetReposForUser {
 			client.doGet();
 			String response = client.getResponse();
 			response = JsonUtil.prettyPrint(response);
-			List<String> rtn = parseJson(response);
+			List<String> rtn = parseJson(response, uid);
 			return rtn;
 		} catch (Exception exp) {
 			throw new RuntimeException(exp);
@@ -35,14 +35,16 @@ public class GetReposForUser {
 
 	}
 	
-	private static List<String> parseJson(String json) {
+	private static List<String> parseJson(String json, String uid) {
 		List<String> rtn = new ArrayList<String>();
 		JSONArray jsonArray = new JSONArray(json);
 		for(int i=0;i<jsonArray.length();i++) {
 			Object obj = jsonArray.get(i);
 			JSONObject jsonObj = (JSONObject) obj;
 			String url = jsonObj.getString("svn_url");
-			rtn.add(url);
+			if(url.startsWith("https://github.com/" + uid)) {
+				rtn.add(url);
+			}
 		}
 		Collections.sort(rtn);
 		return rtn;
