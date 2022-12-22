@@ -16,17 +16,23 @@ public class DeleteOlderThanOneMonth {
 
 	public static void exec(BufferedWriter writer) {
 		try {
+			log.info("\\nCLEANING UP OLD FILES...");
 			writer.append("\nCLEANING UP OLD FILES...");
 			String lastMonth = getLastMonth();
 			String thisMonth = getThisMonth();
 			String targetDir = GithubBackupAppProps.getTargetDir();
 			File dir = new File(targetDir);
 			File[] files = dir.listFiles();
+			log.info("Deleteing files from: " + dir);
+			log.info("Found these files:");
 			for(File file : files) {
+				log.info("\t" + file.getName());
+			}
+ 			for(File file : files) {
 				String fileName = file.getName();
 				log.info("FILE: " + fileName);
 				writer.append("\nFILE: " + fileName);
-				if(fileName != "github-backup" && file.isDirectory() && fileName.contains(thisMonth) == false && fileName.contains(lastMonth) == false) {
+				if("MONTHLY".equals(fileName) == false && "github-backup".equals(fileName) == false && file.isDirectory() && fileName.contains(thisMonth) == false && fileName.contains(lastMonth) == false) {
 					log.info("!!!REMOVING!!!");
 					writer.append("\n!!!REMOVING!!!");
 					FileUtil.rmdir(file);

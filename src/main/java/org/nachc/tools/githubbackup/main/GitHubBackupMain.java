@@ -46,7 +46,7 @@ public class GitHubBackupMain {
 				if(monthlyTargetDir != null) {
 					writer.append("\n--- DOING MONTHLY CLONE:");
 					Clone monthlyClone = new Clone();
-					monthlyClone.exec(repo, targetDir);
+					monthlyClone.exec(repo, monthlyTargetDir);
 					writer.append(monthlyClone.getOut());
 					writer.append("\n");
 					writer.append(monthlyClone.getErr());
