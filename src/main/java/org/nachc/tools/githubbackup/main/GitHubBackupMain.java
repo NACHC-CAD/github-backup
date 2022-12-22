@@ -53,8 +53,10 @@ public class GitHubBackupMain {
 					writer.append("\n-- DONE WITH MONTHLY CLONE");
 				}
 			}
-			// delete older daily backups
-			DeleteOlderThanOneMonth.exec(writer);
+			if(monthlyTargetDir != null) {
+				// delete older daily backups
+				DeleteOlderThanOneMonth.exec(writer);
+			}
 			writer.flush();
 			writer.close();
 			log.info("Done!");
@@ -75,7 +77,7 @@ public class GitHubBackupMain {
 	private static File getMonthlyTargetDir() {
 		String targetDir = GithubBackupAppProps.getTargetDir();
 		String today = TimeUtil.format(TimeUtil.getNow(), "yyyy_MM_dd");
-		if(today.endsWith("01") == false) {
+		if(today.endsWith("22") == false) {
 			return null;
 		}
 		log.info("Today: " + today);
