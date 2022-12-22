@@ -32,7 +32,7 @@ public class DeleteOlderThanOneMonth {
 				String fileName = file.getName();
 				log.info("FILE: " + fileName);
 				writer.append("\nFILE: " + fileName);
-				if("MONTHLY".equals(fileName) == false && "github-backup".equals(fileName) == false && file.isDirectory() && fileName.contains(thisMonth)) {
+				if("MONTHLY".equals(fileName) == false && "github-backup".equals(fileName) == false && file.isDirectory() && fileName.contains(thisMonth) == false) {
 					log.info("!!!REMOVING!!!");
 					writer.append("\n!!!REMOVING!!!");
 					FileUtil.rmdir(file);
