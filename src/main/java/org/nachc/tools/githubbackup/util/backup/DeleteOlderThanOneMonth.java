@@ -32,7 +32,7 @@ public class DeleteOlderThanOneMonth {
 				String fileName = file.getName();
 				log.info("FILE: " + fileName);
 				writer.append("\nFILE: " + fileName);
-				if("MONTHLY".equals(fileName) == false && "github-backup".equals(fileName) == false && file.isDirectory() && fileName.contains(thisMonth) == false) {
+				if("MONTHLY".equals(fileName) == false && "github-backup".equals(fileName) == false && file.isDirectory() && fileName.startsWith(thisMonth) == false) {
 					log.info("!!!REMOVING!!!");
 					writer.append("\n!!!REMOVING!!!");
 					FileUtil.rmdir(file);
@@ -49,14 +49,14 @@ public class DeleteOlderThanOneMonth {
 
 	private static String getThisMonth() {
 		Calendar cal = Calendar.getInstance();
-		String rtn = TimeUtil.format(cal.getTime(), "yyyy_MM");
+		String rtn = TimeUtil.format(cal.getTime(), "yyyy_MM_");
 		return rtn;
 	}
 
 	private static String getLastMonth() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
-		String rtn = TimeUtil.format(cal.getTime(), "yyyy_MM");
+		String rtn = TimeUtil.format(cal.getTime(), "yyyy_MM_");
 		return rtn;
 	}
 
